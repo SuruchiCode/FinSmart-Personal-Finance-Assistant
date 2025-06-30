@@ -1,0 +1,148 @@
+<%- include('../../partials/header') %>
+
+<!-- Main Container -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+  <!-- Form Container -->
+  <div class="w-full max-w-md">
+    <!-- Card Container -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+      <!-- Decorative Top Bar -->
+      <div class="h-2 bg-gradient-to-r from-primary-500 to-secondary-500"></div>
+      
+      <!-- Form Content -->
+      <div class="p-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-800 mb-2 transform transition-transform hover:scale-105">Verify Your Email</h1>
+          <p class="text-gray-600 animate-fade-in">Enter the verification code sent to <span class="text-primary-600 font-medium transform transition-transform hover:scale-105"><%= email %></span></p>
+        </div>
+
+        <!-- Form -->
+        <form action="/auth/verify-otp" method="POST" class="space-y-6">
+          <input type="hidden" name="email" value="<%= email %>" />
+
+          <!-- OTP Input -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 transform transition-transform hover:scale-105">Verification Code</label>
+            <div class="flex justify-between space-x-2">
+              <input type="text" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 transform hover:scale-110 focus:scale-110" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+              <input type="text" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 transform hover:scale-110 focus:scale-110" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+              <input type="text" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 transform hover:scale-110 focus:scale-110" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+              <input type="text" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 transform hover:scale-110 focus:scale-110" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+              <input type="text" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 transform hover:scale-110 focus:scale-110" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+              <input type="text" class="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 transform hover:scale-110 focus:scale-110" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+            </div>
+            <!-- Hidden input to store the complete OTP -->
+            <input type="hidden" id="otp" name="otp" required />
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Verify Email
+          </button>
+        </form>
+
+        <!-- Resend Code Link -->
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            Didn't receive the code?
+            <a href="/auth/resend-otp?email=<%= encodeURIComponent(email) %>" class="font-medium text-primary-600 hover:text-primary-500 transition-all duration-300 hover:underline transform hover:scale-105">
+              Resend code
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const otpInputs = document.querySelectorAll('input[type="text"]');
+    const hiddenInput = document.getElementById('otp');
+
+    // Focus first input on page load
+    setTimeout(() => {
+      otpInputs[0].focus();
+    }, 500);
+
+    // Handle OTP input
+    otpInputs.forEach((input, index) => {
+      // Focus next input on input
+      input.addEventListener('input', function() {
+        // Update hidden input
+        updateHiddenInput();
+
+        // Add animation
+        this.classList.add('scale-110');
+        setTimeout(() => {
+          this.classList.remove('scale-110');
+        }, 200);
+
+        // Focus next input
+        if (this.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+
+      // Handle backspace
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && this.value === '' && index > 0) {
+          // Focus previous input
+          otpInputs[index - 1].focus();
+        }
+      });
+
+      // Handle paste
+      input.addEventListener('paste', function(e) {
+        e.preventDefault();
+
+        // Get pasted text
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+
+        // Fill inputs with pasted text
+        for (let i = 0; i < pastedText.length && i < otpInputs.length; i++) {
+          otpInputs[i].value = pastedText[i];
+          otpInputs[i].classList.add('scale-110');
+          setTimeout(() => {
+            otpInputs[i].classList.remove('scale-110');
+          }, 200);
+        }
+
+        // Update hidden input
+        updateHiddenInput();
+
+        // Focus last filled input
+        const lastIndex = Math.min(pastedText.length, otpInputs.length) - 1;
+        if (lastIndex >= 0) {
+          otpInputs[lastIndex].focus();
+        }
+      });
+    });
+
+    // Update hidden input with OTP values
+    function updateHiddenInput() {
+      const otp = Array.from(otpInputs).map(input => input.value).join('');
+      hiddenInput.value = otp;
+    }
+
+    // Handle form submission
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+      // Update hidden input one last time
+      updateHiddenInput();
+
+      // Validate OTP
+      const otp = hiddenInput.value;
+      if (otp.length !== 6 || !/^\d+$/.test(otp)) {
+        e.preventDefault();
+        alert('Please enter a valid 6-digit code');
+      }
+    });
+  });
+</script>
+
+<%- include('../../partials/footer') %>

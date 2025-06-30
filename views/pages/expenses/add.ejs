@@ -1,0 +1,277 @@
+<%- include('../../partials/header') %>
+
+<div class="max-w-4xl mx-auto px-6 sm:px-8 py-12">
+  <div class="flex items-center mb-8">
+    <a href="/expenses" class="text-primary-600 hover:text-primary-700 mr-3 transition-colors duration-200">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+    </a>
+    <h1 class="text-3xl font-bold text-gray-900">Add New Expense</h1>
+  </div>
+
+  <div class="form-container bg-white rounded-xl shadow-lg p-8">
+    <!-- Animated background gradient -->
+    <div class="form-bg"></div>
+    <form action="/expenses/add" method="POST" class="form-animate-in">
+      <div class="form-grid gap-6">
+        <div class="form-group form-field-animate form-field-animate-delay-1">
+          <label for="amount" class="form-label block text-sm font-medium text-gray-700 mb-2">Amount (₹)</label>
+          <div class="form-icon-left relative">
+            <span class="form-icon absolute left-3 top-1/2 transform -translate-y-1/2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </span>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              class="form-input text-black w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+              placeholder="Enter amount"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group form-field-animate form-field-animate-delay-2">
+          <label for="category" class="form-label block text-sm font-medium text-gray-700 mb-2">Category</label>
+          <div class="form-icon-left relative">
+            <span class="form-icon absolute left-3 top-1/2 transform -translate-y-1/2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+              </svg>
+            </span>
+            <select id="category" name="category" class="form-select text-black w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200" required>
+              <option value="">Select a category</option>
+              <option value="rent">Rent</option>
+              <option value="mortgage">Mortgage</option>
+              <option value="utilities">Utilities</option>
+              <option value="groceries">Groceries</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="insurance">Insurance</option>
+              <option value="education">Education</option>
+              <option value="transportation">Transportation</option>
+              <option value="dining">Dining</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="shopping">Shopping</option>
+              <option value="travel">Travel</option>
+              <option value="gifts">Gifts</option>
+              <option value="subscriptions">Subscriptions</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group md:col-span-2 form-field-animate form-field-animate-delay-3">
+          <label for="description" class="form-label block text-sm font-medium text-gray-700 mb-2">Description (optional)</label>
+          <div class="form-icon-left relative">
+            <span class="form-icon absolute left-3 top-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+              </svg>
+            </span>
+            <textarea
+              id="description"
+              name="description"
+              class="form-textarea text-black w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+              placeholder="Enter a description"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-group form-field-animate form-field-animate-delay-4">
+          <label for="date" class="form-label block text-sm font-medium text-gray-700 mb-2">Date</label>
+          <div class="form-icon-left relative">
+            <span class="form-icon absolute left-3 top-1/2 transform -translate-y-1/2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </span>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              class="form-date-input text-black w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+              value="<%= new Date().toISOString().split('T')[0] %>"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group form-field-animate form-field-animate-delay-5" id="expense-type-container">
+          <label class="form-label block text-sm font-medium text-gray-700 mb-2">Type</label>
+          <div class="mt-2 flex items-center space-x-4">
+            <div id="expense-type" class="px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 transition-all duration-300">
+              Analyzing...
+            </div>
+            <div id="expense-type-loading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600 hidden"></div>
+          </div>
+          <p class="form-hint mt-2 text-sm text-gray-500">AI will automatically classify your expense as a need or want.</p>
+        </div>
+      </div>
+
+      <div class="form-buttons mt-8 flex justify-end space-x-4">
+        <a href="/expenses" class="form-cancel-btn px-6 py-3 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-200">Cancel</a>
+        <button type="submit" class="bg-amber-500 form-submit-btn px-6 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors duration-200">Add Expense</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryInput = document.getElementById('category');
+    const amountInput = document.getElementById('amount');
+    const descriptionInput = document.getElementById('description');
+    const expenseType = document.getElementById('expense-type');
+    const expenseTypeLoading = document.getElementById('expense-type-loading');
+    const form = document.querySelector('form');
+
+    // Function to classify expense
+    const classifyExpense = async () => {
+      const category = categoryInput.value;
+      const amount = amountInput.value;
+
+      if (!category) {
+        expenseType.textContent = 'Select a category';
+        expenseType.className = 'px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 transition-all duration-300';
+        return;
+      }
+
+      try {
+        // Show loading
+        expenseType.textContent = 'Analyzing...';
+        expenseType.className = 'px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 transition-all duration-300';
+        expenseTypeLoading.classList.remove('hidden');
+
+        // Call API to classify expense
+        const response = await fetch('/api/ai/classify-expense', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            category,
+            amount: parseFloat(amount || 0),
+            description: descriptionInput.value
+          }),
+        });
+
+        const data = await response.json();
+
+        // Hide loading
+        expenseTypeLoading.classList.add('hidden');
+
+        if (data.success) {
+          // Add animation
+          expenseType.classList.add('animate-pulse');
+          setTimeout(() => {
+            expenseType.classList.remove('animate-pulse');
+          }, 1000);
+
+          expenseType.textContent = data.type === 'need' ? 'Need' : 'Want';
+          expenseType.className = `px-3 py-1 text-sm font-medium rounded-full transition-all duration-300 transform hover:scale-105 ${
+            data.type === 'need' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+          }`;
+        } else {
+          expenseType.textContent = 'Could not classify';
+          expenseType.className = 'px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800 transition-all duration-300';
+
+          // Show error notification
+          if (window.showNotification) {
+            window.showNotification('Could not classify expense. Please try again.', 'error');
+          }
+        }
+      } catch (error) {
+        console.error('Error classifying expense:', error);
+        expenseTypeLoading.classList.add('hidden');
+        expenseType.textContent = 'Error';
+        expenseType.className = 'px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-800 transition-all duration-300';
+
+        // Show error notification
+        if (window.showNotification) {
+          window.showNotification('Error classifying expense. Please try again.', 'error');
+        }
+      }
+    };
+
+    // Classify expense when category or amount changes
+    categoryInput.addEventListener('change', classifyExpense);
+    amountInput.addEventListener('change', classifyExpense);
+    descriptionInput.addEventListener('blur', classifyExpense);
+
+    // Add hidden input for type before form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Validate form
+      if (!categoryInput.value) {
+        if (window.showNotification) {
+          window.showNotification('Please select a category.', 'warning');
+        }
+        categoryInput.focus();
+        return;
+      }
+
+      if (!amountInput.value || parseFloat(amountInput.value) <= 0) {
+        if (window.showNotification) {
+          window.showNotification('Please enter a valid amount.', 'warning');
+        }
+        amountInput.focus();
+        return;
+      }
+
+      // Get the classified type
+      const type = expenseType.textContent.toLowerCase();
+
+      // Only proceed if we have a valid type
+      if (type === 'need' || type === 'want') {
+        // Create hidden input for type
+        const typeInput = document.createElement('input');
+        typeInput.type = 'hidden';
+        typeInput.name = 'type';
+        typeInput.value = type;
+
+        // Add to form
+        this.appendChild(typeInput);
+
+        // Add loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          const originalText = submitBtn.innerHTML;
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `
+            <div class="flex items-center justify-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Adding Expense...
+            </div>
+          `;
+        }
+
+        // Submit form
+        this.submit();
+      } else {
+        if (window.showNotification) {
+          window.showNotification('Please select a category to classify the expense.', 'warning');
+        } else {
+          alert('Please select a category to classify the expense.');
+        }
+      }
+    });
+
+    // Initial classification if category is already selected
+    if (categoryInput.value) {
+      classifyExpense();
+    }
+  });
+</script>
+
+<%- include('../../partials/footer') %>

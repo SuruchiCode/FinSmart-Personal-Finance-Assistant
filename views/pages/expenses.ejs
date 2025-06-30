@@ -1,0 +1,168 @@
+<%- include('../partials/header') %>
+
+<!-- Main Container -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <!-- Content Container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-4 md:mb-0 animate-slide-right">Expenses</h1>
+      <a href="/expenses/add" class="btn btn-primary flex items-center px-6 py-3 rounded-lg animate-slide-left transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden btn-ripple">
+        <span class="relative z-10 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Add New Expense
+        </span>
+      </a>
+    </div>
+
+    <!-- Filters Card -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8 animate-scale-in delay-200 transform transition-all duration-300 hover:shadow-xl relative overflow-hidden">
+      <!-- Animated background gradient -->
+      <div class="absolute inset-0 bg-gradient-to-br from-primary-50 to-secondary-50 opacity-5"></div>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Filters</h2>
+
+      <form action="/expenses" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="space-y-2">
+          <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+          <select id="category" name="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300">
+            <option value="">All Categories</option>
+            <% if (categories && categories.length > 0) { %>
+              <% categories.forEach(category => { %>
+                <option value="<%= category %>" <%= filters.category === category ? 'selected' : '' %>><%= category %></option>
+              <% }); %>
+            <% } else { %>
+              <option value="rent">Rent</option>
+              <option value="mortgage">Mortgage</option>
+              <option value="utilities">Utilities</option>
+              <option value="groceries">Groceries</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="insurance">Insurance</option>
+              <option value="education">Education</option>
+              <option value="transportation">Transportation</option>
+              <option value="dining">Dining</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="shopping">Shopping</option>
+              <option value="travel">Travel</option>
+              <option value="gifts">Gifts</option>
+              <option value="subscriptions">Subscriptions</option>
+              <option value="other">Other</option>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+          <select id="type" name="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300">
+            <option value="">All Types</option>
+            <option value="need" <%= filters.type === 'need' ? 'selected' : '' %>>Need</option>
+            <option value="want" <%= filters.type === 'want' ? 'selected' : '' %>>Want</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label for="period" class="block text-sm font-medium text-gray-700">Time Period</label>
+          <select id="period" name="period" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300">
+            <option value="this-month" <%= filters.period === 'this-month' ? 'selected' : '' %>>This Month</option>
+            <option value="last-month" <%= filters.period === 'last-month' ? 'selected' : '' %>>Last Month</option>
+            <option value="last-3-months" <%= filters.period === 'last-3-months' ? 'selected' : '' %>>Last 3 Months</option>
+            <option value="last-6-months" <%= filters.period === 'last-6-months' ? 'selected' : '' %>>Last 6 Months</option>
+            <option value="this-year" <%= filters.period === 'this-year' ? 'selected' : '' %>>This Year</option>
+            <option value="all-time" <%= filters.period === 'all-time' ? 'selected' : '' %>>All Time</option>
+          </select>
+        </div>
+
+        <div class="md:col-span-3 flex justify-end space-x-4">
+          <button type="submit" class="btn btn-primary px-6 py-2 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden btn-ripple">
+            <span class="relative z-10">Apply Filters</span>
+          </button>
+          <a href="/expenses" class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-2 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg">
+            Reset
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Expenses Table Card -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden animate-scale-in delay-300 transform transition-all duration-300 hover:shadow-xl relative">
+      <!-- Animated background gradient -->
+      <div class="absolute inset-0 bg-gradient-to-br from-primary-50 to-secondary-50 opacity-5"></div>
+      <% if (expenses && expenses.length > 0) { %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th scope="col" class="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                <th scope="col" class="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th scope="col" class="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th scope="col" class="px-8 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% expenses.forEach((expense, index) => { %>
+                <tr class="hover:bg-gray-50 transition-all duration-300 animate-fade-in" data-animation-delay="<%= index * 0.05 %>">
+                  <td class="px-8 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= new Date(expense.date).toLocaleDateString() %>
+                  </td>
+                  <td class="px-8 py-4 whitespace-nowrap text-sm font-medium text-gray-900 capitalize">
+                    <%= expense.category %>
+                  </td>
+                  <td class="px-8 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= expense.description || '-' %>
+                  </td>
+                  <td class="px-8 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    ₹<%= expense.amount.toFixed(2) %>
+                  </td>
+                  <td class="px-8 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <span class="px-3 py-1 text-xs font-medium rounded-full <%= expense.type === 'need' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' %> transition-all duration-300 hover:scale-110 inline-block">
+                      <%= expense.type %>
+                    </span>
+                  </td>
+                  <td class="px-8 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <a href="/expenses/edit/<%= expense._id %>" class="text-primary-600 hover:text-primary-900 mr-4 transition-all duration-300 hover:underline">Edit</a>
+                    <form action="/expenses/delete/<%= expense._id %>" method="POST" class="inline">
+                      <button type="submit" class="text-red-600 hover:text-red-900 transition-all duration-300 hover:underline" onclick="return confirm('Are you sure you want to delete this expense?')">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="text-center py-16">
+          <svg class="mx-auto h-16 w-16 text-gray-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="mt-4 text-lg font-medium text-gray-900">No expenses</h3>
+          <p class="mt-2 text-sm text-gray-500">Get started by adding a new expense.</p>
+          <div class="mt-8">
+            <a href="/expenses/add" class="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+              Add Expense
+            </a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize animation delays
+    document.querySelectorAll('[data-animation-delay]').forEach(element => {
+      const delay = element.getAttribute('data-animation-delay');
+      if (delay) {
+        element.style.animationDelay = `${delay}s`;
+      }
+    });
+  });
+</script>
+
+<%- include('../partials/footer') %>

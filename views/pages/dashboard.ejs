@@ -1,0 +1,416 @@
+<%- include('../partials/header') %>
+
+<!-- Main Container -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <!-- Content Container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Welcome Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+      <div class="animate-slide-right">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome, <span class="text-primary-600"><%= user.name %></span></h1>
+        <p class="text-gray-600 text-lg">Here's an overview of your finances</p>
+      </div>
+
+      <div class="mt-6 md:mt-0 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 animate-slide-left">
+        <a href="/expenses/add" class="btn btn-primary flex items-center justify-center px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden btn-ripple">
+          <span class="relative z-10 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add Expense
+          </span>
+        </a>
+        <a href="/savings/add" class="btn btn-secondary flex items-center justify-center px-6 py-3 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden btn-ripple">
+          <span class="relative z-10 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add Savings Goal
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Expense Summary Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 transform transition-all duration-300 hover:shadow-xl">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-900">Expense Summary</h2>
+            <a href="/expenses" class="text-sm text-primary-600 hover:text-primary-700 font-medium">View All</a>
+          </div>
+
+          <div class="mb-8">
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-base font-medium text-gray-700">Total Expenses</span>
+              <span class="text-2xl font-bold text-gray-900">₹<%= totalExpenses.toFixed(2) %></span>
+            </div>
+
+            <div class="bg-gray-200 rounded-full h-3 mb-6">
+              <div class="bg-primary-600 h-3 rounded-full" style="width: 100%"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-sm font-medium text-gray-700">Needs</span>
+                  <span class="text-base font-semibold text-gray-900">₹<%= needsExpenses.toFixed(2) %></span>
+                </div>
+                <div class="bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full progress-bar" data-width="<%= needsPercentage %>%"></div>
+                </div>
+                <div class="text-xs text-gray-500 mt-2 text-right"><%= needsPercentage %>% of total</div>
+              </div>
+
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-sm font-medium text-gray-700">Wants</span>
+                  <span class="text-base font-semibold text-gray-900">₹<%= wantsExpenses.toFixed(2) %></span>
+                </div>
+                <div class="bg-gray-200 rounded-full h-2">
+                  <div class="bg-purple-600 h-2 rounded-full progress-bar" data-width="<%= wantsPercentage %>%"></div>
+                </div>
+                <div class="text-xs text-gray-500 mt-2 text-right"><%= wantsPercentage %>% of total</div>
+              </div>
+            </div>
+          </div>
+
+          <% if (sortedCategories && sortedCategories.length > 0) { %>
+            <div>
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Top Spending Categories</h3>
+              <div class="space-y-4">
+                <% sortedCategories.forEach(([category, amount]) => { %>
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                      <div class="flex justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-700 capitalize"><%= category %></span>
+                        <span class="text-sm font-medium text-gray-900">₹<%= amount.toFixed(2) %></span>
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2 progress-bar">
+                        <div class="bg-primary-600 h-2 rounded-full animate-on-scroll" data-animation="animate-slide-right" style="width: 0%" data-width="<%= Math.round((amount / totalExpenses) * 100) %>%"></div>
+                      </div>
+                      <div class="flex justify-between mt-1">
+                        <span class="text-xs text-gray-500"><%= Math.round((amount / totalExpenses) * 100) %>% of total</span>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="text-center py-8">
+              <p class="text-gray-500 mb-2">No expenses recorded yet.</p>
+              <a href="/expenses/add" class="text-primary-600 hover:text-primary-700 text-sm font-medium">Add your first expense</a>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- AI Insights Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 transform transition-all duration-300 hover:shadow-xl">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-900">AI Insights</h2>
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">AI-Powered</span>
+          </div>
+
+          <% if (insights && insights.length > 0) { %>
+            <div class="space-y-4">
+              <% insights.forEach(insight => { %>
+                <div class="p-4 rounded-lg border <%= insight.type === 'warning' ? 'bg-amber-50 border-amber-100' : insight.type === 'positive' ? 'bg-green-50 border-green-100' : 'bg-blue-50 border-blue-100' %>">
+                  <p class="text-sm <%= insight.type === 'warning' ? 'text-amber-800' : insight.type === 'positive' ? 'text-green-800' : 'text-blue-800' %>">
+                    <span class="font-semibold">
+                      <%= insight.type === 'warning' ? '⚠️ Warning: ' : insight.type === 'positive' ? '✅ Insight: ' : '💡 Tip: ' %>
+                    </span>
+                    <%= insight.message %>
+                  </p>
+                  <% if (insight.action) { %>
+                    <p class="text-xs mt-2 font-medium text-gray-600">
+                      Recommendation: <%= insight.action %>
+                    </p>
+                  <% } %>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-8">
+              <p class="text-gray-500">No insights available yet. Add more expenses to get personalized insights.</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-8">
+        <!-- Quick Actions Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 transform transition-all duration-300 hover:shadow-xl">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
+
+          <div class="space-y-4">
+            <a href="/expenses/add" class="w-full py-3 px-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-300 hover:shadow-lg flex items-center justify-center relative overflow-hidden btn-ripple">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              Add New Expense
+            </a>
+            <a href="/savings/add" class="w-full py-3 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 hover:shadow-lg flex items-center justify-center relative overflow-hidden btn-ripple">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Create Savings Goal
+            </a>
+            <button id="view-insights-btn" class="w-full py-3 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-300 hover:shadow-lg flex items-center justify-center relative overflow-hidden btn-ripple">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+              View Financial Insights
+            </button>
+          </div>
+        </div>
+
+        <!-- Savings Progress Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 transform transition-all duration-300 hover:shadow-xl">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-900">Savings Progress</h2>
+            <a href="/savings" class="text-sm text-primary-600 hover:text-primary-700 font-medium">View All</a>
+          </div>
+
+          <% if (savingsGoals && savingsGoals.length > 0) { %>
+            <div class="space-y-6">
+              <% savingsGoals.slice(0, 3).forEach(goal => { %>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700"><%= goal.name %></span>
+                    <span class="text-sm font-medium text-gray-900">₹<%= goal.currentAmount.toFixed(2) %> / ₹<%= goal.targetAmount.toFixed(2) %></span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5 progress-bar">
+                    <div class="bg-green-600 h-2.5 rounded-full animate-on-scroll" data-animation="animate-slide-right" style="width: 0%" data-width="<%= Math.min(Math.round((goal.currentAmount / goal.targetAmount) * 100), 100) %>%"></div>
+                  </div>
+                  <div class="flex justify-between mt-2">
+                    <span class="text-xs text-gray-500"><%= Math.round((goal.currentAmount / goal.targetAmount) * 100) %>%</span>
+                    <span class="text-xs text-gray-500">Deadline: <%= new Date(goal.deadline).toLocaleDateString() %></span>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-8">
+              <p class="text-gray-500 mb-2">No savings goals yet.</p>
+              <a href="/savings/add" class="text-primary-600 hover:text-primary-700 text-sm font-medium">Create your first savings goal</a>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Notifications Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 transform transition-all duration-300 hover:shadow-xl">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-semibold text-gray-900">Notifications</h2>
+            <button id="mark-all-read-btn" class="text-sm text-primary-600 hover:text-primary-700 font-medium">Mark All as Read</button>
+          </div>
+
+          <% if (notifications && notifications.length > 0) { %>
+            <div class="space-y-4">
+              <% notifications.forEach(notification => { %>
+                <div class="p-4 rounded-lg border <%= notification.type === 'alert' ? 'bg-amber-50 border-amber-100' : notification.type === 'achievement' ? 'bg-green-50 border-green-100' : 'bg-blue-50 border-blue-100' %>">
+                  <p class="text-sm <%= notification.type === 'alert' ? 'text-amber-800' : notification.type === 'achievement' ? 'text-green-800' : 'text-blue-800' %>">
+                    <%= notification.message %>
+                  </p>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-8">
+              <p class="text-gray-500">No notifications.</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Financial Insights Modal -->
+<div id="insights-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden opacity-0 transition-opacity duration-300">
+  <!-- Modal background animation -->
+  <div class="absolute inset-0 bg-gradient-to-br from-primary-900 to-secondary-900 opacity-20"></div>
+  <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto transform transition-all duration-500 scale-95 opacity-0 relative z-10">
+    <div class="p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Financial Insights</h2>
+        <button id="close-insights-btn" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-8">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Spending Insights</h3>
+          <div class="space-y-4">
+            <% if (insights && insights.length > 0) { %>
+              <% insights.forEach(insight => { %>
+                <div class="p-4 rounded-lg border <%= insight.type === 'warning' ? 'bg-amber-50 border-amber-100' : insight.type === 'positive' ? 'bg-green-50 border-green-100' : 'bg-blue-50 border-blue-100' %>">
+                  <p class="text-sm <%= insight.type === 'warning' ? 'text-amber-800' : insight.type === 'positive' ? 'text-green-800' : 'text-blue-800' %>">
+                    <span class="font-semibold">
+                      <%= insight.type === 'warning' ? '⚠️ Warning: ' : insight.type === 'positive' ? '✅ Insight: ' : '💡 Tip: ' %>
+                    </span>
+                    <%= insight.message %>
+                  </p>
+                  <% if (insight.action) { %>
+                    <p class="text-xs mt-2 font-medium text-gray-600">
+                      Recommendation: <%= insight.action %>
+                    </p>
+                  <% } %>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <p class="text-sm text-blue-800">
+                  <span class="font-semibold">💡 Tip: </span>
+                  Add more expenses to get personalized insights.
+                </p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Behavioral Nudges</h3>
+          <div class="space-y-4">
+            <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+              <p class="text-sm text-blue-800">
+                <span class="font-semibold">💡 Behavioral Nudge: </span>
+                Setting up automatic transfers to your savings account can help you save more consistently.
+              </p>
+              <p class="text-xs mt-2 font-medium text-gray-600">
+                Try this: Set up an automatic transfer of 10% of your income to your savings account on payday.
+              </p>
+            </div>
+            <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+              <p class="text-sm text-blue-800">
+                <span class="font-semibold">💡 Behavioral Nudge: </span>
+                Using the 24-hour rule for non-essential purchases can help reduce impulse spending.
+              </p>
+              <p class="text-xs mt-2 font-medium text-gray-600">
+                Try this: Wait 24 hours before making any non-essential purchase over $50.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-gray-200">
+          <p class="text-sm text-gray-500">
+            These insights are generated by our AI based on your spending patterns. The more data you provide, the more accurate and helpful these insights will be.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize progress bars
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+      const width = bar.getAttribute('data-width');
+      if (width) {
+        bar.style.width = width;
+      }
+    });
+
+    // Initialize animation delays
+    document.querySelectorAll('[data-animation-delay]').forEach(element => {
+      const delay = element.getAttribute('data-animation-delay');
+      if (delay) {
+        element.style.animationDelay = `${delay}s`;
+      }
+    });
+
+    // Insights modal
+    const insightsModal = document.getElementById('insights-modal');
+    const viewInsightsBtn = document.getElementById('view-insights-btn');
+    const closeInsightsBtn = document.getElementById('close-insights-btn');
+
+    if (viewInsightsBtn && insightsModal && closeInsightsBtn) {
+      viewInsightsBtn.addEventListener('click', function() {
+        // Show modal
+        insightsModal.classList.remove('hidden');
+        setTimeout(() => {
+          insightsModal.classList.add('opacity-100');
+          const modalContent = insightsModal.querySelector('.bg-white');
+          if (modalContent) {
+            modalContent.classList.add('scale-100', 'opacity-100');
+            modalContent.classList.remove('scale-95', 'opacity-0');
+          }
+        }, 10);
+      });
+
+      closeInsightsBtn.addEventListener('click', function() {
+        // Hide modal with animation
+        const modalContent = insightsModal.querySelector('.bg-white');
+        if (modalContent) {
+          modalContent.classList.remove('scale-100', 'opacity-100');
+          modalContent.classList.add('scale-95', 'opacity-0');
+        }
+        insightsModal.classList.remove('opacity-100');
+        setTimeout(() => {
+          insightsModal.classList.add('hidden');
+        }, 300);
+      });
+
+      // Close modal when clicking outside
+      insightsModal.addEventListener('click', function(e) {
+        if (e.target === insightsModal) {
+          // Hide modal with animation when clicking outside
+          const modalContent = insightsModal.querySelector('.bg-white');
+          if (modalContent) {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+          }
+          insightsModal.classList.remove('opacity-100');
+          setTimeout(() => {
+            insightsModal.classList.add('hidden');
+          }, 300);
+        }
+      });
+    }
+
+    // Mark all notifications as read
+    const markAllReadBtn = document.getElementById('mark-all-read-btn');
+    if (markAllReadBtn) {
+      markAllReadBtn.addEventListener('click', function() {
+        // Get all notification elements
+        const notifications = document.querySelectorAll('.card:last-child .p-4');
+
+        // Add fade-out animation to each notification
+        notifications.forEach((notification, index) => {
+          setTimeout(() => {
+            notification.classList.add('transition-all', 'duration-300', 'opacity-50');
+          }, index * 100);
+        });
+
+        // Show success message
+        setTimeout(() => {
+          const successMsg = document.createElement('div');
+          successMsg.className = 'fixed top-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-md transform transition-all duration-500 translate-x-full';
+          successMsg.innerHTML = '<div class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> All notifications marked as read!</div>';
+          document.body.appendChild(successMsg);
+
+          setTimeout(() => {
+            successMsg.classList.remove('translate-x-full');
+          }, 10);
+
+          setTimeout(() => {
+            successMsg.classList.add('translate-x-full');
+            setTimeout(() => {
+              successMsg.remove();
+            }, 500);
+          }, 3000);
+        }, 500);
+      });
+    }
+  });
+</script>
+
+<%- include('../partials/footer') %>
