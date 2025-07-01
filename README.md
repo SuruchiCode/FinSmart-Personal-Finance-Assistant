@@ -2,8 +2,8 @@
 
 FinSmart is a full-stack web application that helps users manage their personal finances, track expenses, and plan savings. The app features user authentication, OTP email verification, and a modern, responsive UI.
 
+![Screenshot 2025-06-26 171729](https://github.com/user-attachments/assets/c779582d-8e00-4bc7-b1ee-333d7aeca188)
 
-![Uploading Screenshot 2025-06-26 171729.png…]()
 #Features
 
 - User registration, login, and secure session management
