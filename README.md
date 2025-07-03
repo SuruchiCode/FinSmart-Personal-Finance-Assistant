@@ -1,8 +1,10 @@
 # FinSmart – Personal Finance Assistant
 
 FinSmart is a full-stack web application that helps users manage their personal finances, track expenses, and plan savings. The app features user authentication, OTP email verification, and a modern, responsive UI.
+
 Screenshot 1:
 ![Screenshot 2025-07-03 172519](https://github.com/user-attachments/assets/0b8c936a-8929-4051-b6f3-e30e03ea5c34)
+
 
 Screenshot 2:
 ![image](https://github.com/user-attachments/assets/da951cb6-6383-4efb-b986-66a19119f4a8)
