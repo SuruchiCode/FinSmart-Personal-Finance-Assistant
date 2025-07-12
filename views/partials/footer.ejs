@@ -1,0 +1,318 @@
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white mt-auto relative overflow-hidden">
+    <!-- Animated wave background -->
+    <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 opacity-50 wave-animation"></div>
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center relative z-10">
+        <div class="mb-4 md:mb-0">
+          <p class="text-gray-500 text-sm">&copy; <%= new Date().getFullYear() %> FinSmart. All rights reserved.</p>
+        </div>
+        <div class="flex space-x-6">
+          <a href="/about" class="text-gray-500 hover:text-gray-700 text-sm transition-colors duration-300 hover:text-primary-600">About</a>
+          <a href="/contact" class="text-gray-500 hover:text-gray-700 text-sm transition-colors duration-300 hover:text-primary-600">Contact</a>
+          <a href="#" class="text-gray-500 hover:text-gray-700 text-sm transition-colors duration-300 hover:text-primary-600">Privacy Policy</a>
+          <a href="#" class="text-gray-500 hover:text-gray-700 text-sm transition-colors duration-300 hover:text-primary-600">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chatbox -->
+  <% if (user) { %>
+  <div id="chatbox" class="fixed bottom-4 right-4 z-50 animate-fade-in">
+    <!-- Notification Indicator -->
+    <div id="chat-notification" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs animate-pulse hidden">1</div>
+    <!-- Chat button -->
+    <button id="chat-button" class="bg-blue-600 hover:bg-primary-700 text-white rounded-full p-4 shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl">
+      <!-- Ripple effect container -->
+      <span class=" absolute inset-0 rounded-full overflow-hidden"></span>
+      <svg id="chat-open-icon" class="bg-black w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+      </svg>
+      <svg id="chat-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Chatbox container -->
+    <div id="chat-container" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-white rounded-lg shadow-xl overflow-hidden flex flex-col transform transition-all duration-300 scale-95 opacity-0" style="transform-origin: bottom right;">
+      <!-- Header -->
+      <div class="bg-primary-600 text-white px-4 py-3 flex items-center justify-between animate-gradient">
+        <h3 class="font-medium flex items-center">
+          <svg class="w-5 h-5 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          Financial Assistant
+        </h3>
+        <button id="chat-close-button" class="text-white hover:text-gray-200 transition-colors duration-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Messages -->
+      <div id="chat-messages" class="flex-1 p-4 overflow-y-auto max-h-96">
+        <div class="text-center text-gray-500 py-8 animate-fade-in">
+          <div class="w-16 h-16 mx-auto mb-4 text-primary-500 animate-float">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <p class="animate-typing">No messages yet.</p>
+          <p class="text-sm mt-2">Ask me anything about your finances!</p>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <form id="chat-form" class="border-t border-gray-200 p-4">
+        <div class="flex items-center">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Type a message..."
+            class="flex-1 border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black transition-all duration-300"
+          />
+          <button
+            type="submit"
+            id="chat-submit"
+            class="bg-primary-600 hover:bg-primary-700 text-white rounded-r-md px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:bg-primary-800 relative overflow-hidden btn-ripple"
+          >
+            <span class="relative z-10">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Scripts -->
+  <script src="/js/animations.js"></script>
+  <script src="/js/custom.js"></script>
+  <script src="/js/form-handler.js"></script>
+  <script>
+    // Page loader
+    window.addEventListener('load', function() {
+      const pageLoader = document.getElementById('page-loader');
+      if (pageLoader) {
+        setTimeout(() => {
+          pageLoader.style.opacity = '0';
+          setTimeout(() => {
+            pageLoader.style.display = 'none';
+          }, 500);
+        }, 500);
+      }
+    });
+
+    // Mobile menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.querySelector('.mobile-menu-button');
+      const mobileMenu = document.querySelector('.mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+
+          // Toggle icons
+          const openIcon = mobileMenuButton.querySelector('svg:first-child');
+          const closeIcon = mobileMenuButton.querySelector('svg:last-child');
+
+          openIcon.classList.toggle('hidden');
+          closeIcon.classList.toggle('hidden');
+        });
+      }
+
+      // Chatbox functionality
+      const chatButton = document.getElementById('chat-button');
+      const chatContainer = document.getElementById('chat-container');
+      const chatCloseButton = document.getElementById('chat-close-button');
+      const chatOpenIcon = document.getElementById('chat-open-icon');
+      const chatCloseIcon = document.getElementById('chat-close-icon');
+      const chatForm = document.getElementById('chat-form');
+      const chatInput = document.getElementById('chat-input');
+      const chatMessages = document.getElementById('chat-messages');
+
+      if (chatButton && chatContainer) {
+        // Toggle chatbox
+        chatButton.addEventListener('click', function() {
+          chatContainer.classList.toggle('hidden');
+
+        // Add animation when showing
+        if (!chatContainer.classList.contains('hidden')) {
+          setTimeout(() => {
+            chatContainer.classList.add('scale-100', 'opacity-100');
+            chatContainer.classList.remove('scale-95', 'opacity-0');
+          }, 10);
+        } else {
+          chatContainer.classList.remove('scale-100', 'opacity-100');
+          chatContainer.classList.add('scale-95', 'opacity-0');
+        }
+          chatOpenIcon.classList.toggle('hidden');
+          chatCloseIcon.classList.toggle('hidden');
+
+          if (!chatContainer.classList.contains('hidden')) {
+            loadChatMessages();
+          }
+        });
+
+        // Close chatbox
+        if (chatCloseButton) {
+          chatCloseButton.addEventListener('click', function() {
+            chatContainer.classList.remove('scale-100', 'opacity-100');
+          chatContainer.classList.add('scale-95', 'opacity-0');
+          setTimeout(() => {
+            chatContainer.classList.add('hidden');
+          }, 300);
+            chatOpenIcon.classList.remove('hidden');
+            chatCloseIcon.classList.add('hidden');
+          });
+        }
+
+        // Send message
+        if (chatForm && chatInput && chatMessages) {
+          chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Clear input
+            chatInput.value = '';
+
+            // Add user message to UI with typing animation
+            addMessage(message, 'user', true);
+
+            // Send message to server
+            fetch('/api/ai/chat', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ content: message }),
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success && data.aiMessage) {
+                // Add AI message to UI
+                addMessage(data.aiMessage.content, 'assistant');
+              }
+            })
+            .catch(error => {
+              console.error('Error sending message:', error);
+            });
+          });
+        }
+      }
+
+      // Load chat messages
+      function loadChatMessages() {
+        if (!chatMessages) return;
+
+        fetch('/api/ai/chat')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success && data.messages && data.messages.length > 0) {
+              // Clear default message
+              chatMessages.innerHTML = '';
+
+              // Add messages to UI
+              data.messages.forEach(message => {
+                addMessage(message.content, message.sender, false);
+              });
+
+              // Scroll to bottom
+              chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+          })
+          .catch(error => {
+            console.error('Error loading messages:', error);
+          });
+      }
+
+      // Add message to UI
+      function addMessage(content, sender, scroll = true) {
+        if (!chatMessages) return;
+
+        // Clear default message if it exists
+        if (chatMessages.querySelector('.text-center')) {
+          chatMessages.innerHTML = '';
+        }
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`;
+
+        const messageBubble = document.createElement('div');
+        messageBubble.className = `max-w-xs sm:max-w-sm px-4 py-2 rounded-lg chat-bubble-in ${
+          sender === 'user'
+            ? 'bg-primary-600 text-white rounded-br-none'
+            : 'bg-gray-200 text-gray-800 rounded-bl-none'
+        }`;
+
+        // Add a subtle animation based on sender
+        if (sender === 'assistant') {
+          // Add typing animation for assistant messages
+          const typingIndicator = document.createElement('div');
+          typingIndicator.className = 'flex space-x-1 items-center py-2';
+          typingIndicator.innerHTML = `
+            <div class="w-2 h-2 rounded-full bg-gray-500 animate-pulse"></div>
+            <div class="w-2 h-2 rounded-full bg-gray-500 animate-pulse delay-100"></div>
+            <div class="w-2 h-2 rounded-full bg-gray-500 animate-pulse delay-200"></div>
+          `;
+
+          messageBubble.appendChild(typingIndicator);
+          messageDiv.appendChild(messageBubble);
+          chatMessages.appendChild(messageDiv);
+
+          // Simulate typing delay
+          setTimeout(() => {
+            // Remove typing indicator
+            messageBubble.removeChild(typingIndicator);
+
+            // Add the actual message
+            const messageText = document.createElement('p');
+            messageText.className = 'text-sm';
+
+            // Add the message word by word for a typing effect
+            const words = content.split(' ');
+            let wordIndex = 0;
+
+            function addNextWord() {
+              if (wordIndex < words.length) {
+                if (messageText.textContent) {
+                  messageText.textContent += ' ' + words[wordIndex];
+                } else {
+                  messageText.textContent = words[wordIndex];
+                }
+                wordIndex++;
+                setTimeout(addNextWord, 50);
+              }
+            }
+
+            addNextWord();
+            messageBubble.appendChild(messageText);
+          }, 1000);
+        } else {
+          // Regular message for user
+          const messageText = document.createElement('p');
+          messageText.className = 'text-sm';
+          messageText.textContent = content;
+
+          messageBubble.appendChild(messageText);
+          messageDiv.appendChild(messageBubble);
+          chatMessages.appendChild(messageDiv);
+        }
+
+        if (scroll) {
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

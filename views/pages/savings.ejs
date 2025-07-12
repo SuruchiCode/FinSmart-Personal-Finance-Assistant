@@ -1,0 +1,113 @@
+<%- include('../partials/header') %>
+
+<!-- Main Container -->
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <!-- Content Container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-4 md:mb-0 animate-slide-right">Savings Goals</h1>
+      <a href="/savings/add" class="btn btn-primary flex items-center px-6 py-3 rounded-lg animate-slide-left transition-all duration-300 hover:scale-105 hover:shadow-lg relative overflow-hidden btn-ripple">
+        <span class="relative z-10 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Add New Goal
+        </span>
+      </a>
+    </div>
+    
+    <% if (savingsGoals && savingsGoals.length > 0) { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% savingsGoals.forEach((goal, index) => { %>
+          <div class="bg-white rounded-2xl shadow-lg p-8 animate-scale-in transform transition-all duration-300 hover:shadow-xl relative overflow-hidden" data-animation-delay="<%= index * 0.1 %>">
+            <!-- Animated background gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-50 to-secondary-50 opacity-5"></div>
+            
+            <div class="flex justify-between items-start mb-6">
+              <h2 class="text-xl font-semibold text-gray-900"><%= goal.name %></h2>
+              <div class="flex space-x-3">
+                <a href="/savings/edit/<%= goal._id %>" class="text-primary-600 hover:text-primary-700 transition-all duration-300 hover:scale-110">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                </a>
+                <form action="/savings/delete/<%= goal._id %>" method="POST" class="inline">
+                  <button type="submit" class="text-red-600 hover:text-red-700 transition-all duration-300 hover:scale-110" onclick="return confirm('Are you sure you want to delete this savings goal?')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </form>
+              </div>
+            </div>
+            
+            <div class="mb-6">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-700">Progress</span>
+                <span class="text-sm font-medium text-gray-900"><%= Math.round((goal.currentAmount / goal.targetAmount) * 100) %>%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-green-600 h-3 rounded-full transition-all duration-500 ease-in-out progress-bar" data-width="<%= Math.min(Math.round((goal.currentAmount / goal.targetAmount) * 100), 100) %>%"></div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6 mb-6">
+              <div class="bg-gray-50 rounded-xl p-4 transition-all duration-300 hover:bg-gray-100">
+                <p class="text-xs text-gray-500 mb-1">Current Amount</p>
+                <p class="text-xl font-semibold text-gray-900">₹<%= goal.currentAmount.toFixed(2) %></p>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-4 transition-all duration-300 hover:bg-gray-100">
+                <p class="text-xs text-gray-500 mb-1">Target Amount</p>
+                <p class="text-xl font-semibold text-gray-900">₹<%= goal.targetAmount.toFixed(2) %></p>
+              </div>
+            </div>
+            
+            <div class="bg-gray-50 rounded-xl p-4 transition-all duration-300 hover:bg-gray-100">
+              <p class="text-xs text-gray-500 mb-1">Deadline</p>
+              <p class="text-sm font-medium text-gray-900 mb-2"><%= new Date(goal.deadline).toLocaleDateString() %></p>
+              
+              <% 
+                const today = new Date();
+                const deadline = new Date(goal.deadline);
+                const daysLeft = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+                
+                let statusClass = 'bg-green-100 text-green-800';
+                if (daysLeft < 0) {
+                  statusClass = 'bg-red-100 text-red-800';
+                } else if (daysLeft < 7) {
+                  statusClass = 'bg-amber-100 text-amber-800';
+                }
+              %>
+              
+              <span class="inline-block px-3 py-1 text-xs font-medium rounded-full <%= statusClass %> transition-all duration-300 hover:scale-105">
+                <%= daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Due today' : `${daysLeft} days left` %>
+              </span>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="bg-white rounded-2xl shadow-lg p-12 text-center animate-scale-in transform transition-all duration-300 hover:shadow-xl relative overflow-hidden">
+        <!-- Animated background gradient -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-50 to-secondary-50 opacity-5"></div>
+        
+        <svg class="mx-auto h-16 w-16 text-gray-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">No savings goals</h3>
+        <p class="mt-2 text-sm text-gray-500">Get started by creating a new savings goal.</p>
+        <div class="mt-8">
+          <a href="/savings/add" class="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Create Savings Goal
+          </a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
