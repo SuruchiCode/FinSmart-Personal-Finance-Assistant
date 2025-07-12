@@ -75,6 +75,9 @@ FinSmart is a full-stack web application that helps users manage their personal 
    ```
    npm run dev
    ```
+    ```
+   python gemini_chatbot.py
+   ```
    Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
