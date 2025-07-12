@@ -16,7 +16,7 @@ FinSmart is a full-stack web application that helps users manage their personal 
 - Email-based OTP verification for added security
 - Dashboard for tracking expenses and savings goals
 - Add, edit, and delete expenses and savings entries
-- Chat assistant (for Financial Queries)
+- AI assistant (for Financial Queries)
 - Responsive design with EJS and Tailwind CSS
 - MongoDB Atlas for cloud data storage
 
@@ -66,6 +66,7 @@ FinSmart is a full-stack web application that helps users manage their personal 
      EMAIL_USER=your-email@gmail.com
      EMAIL_PASS=your-app-password
      EMAIL_FROM=FinSmart <your-email@gmail.com>
+     GEMINI_API_KEY=your-gemini-api
      ```
 
    - **Note:** For Gmail, use an [App Password](https://support.google.com/accounts/answer/185833) if 2FA is enabled.
