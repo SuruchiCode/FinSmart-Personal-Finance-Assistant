@@ -1,6 +1,6 @@
 # FinSmart – Personal Finance Assistant
 
-FinSmart is a full-stack web application that helps users manage their personal finances, track expenses, and plan savings. The app features user authentication, OTP email verification, and a modern, responsive UI.
+FinSmart is a full-stack web application that helps users manage their personal finances, track expenses, and plan savings. The app features user authentication, OTP email verification, and a modern, responsive UI along with a finance AI chatbot.
 
 ## Screenshot 1:
 ![Screenshot 2025-07-03 172519](https://github.com/user-attachments/assets/0b8c936a-8929-4051-b6f3-e30e03ea5c34)
@@ -26,6 +26,7 @@ FinSmart is a full-stack web application that helps users manage their personal 
 - MongoDB & Mongoose
 - EJS templating
 - Tailwind CSS
+- Gemini API
 - Nodemailer (for email/OTP)
 - JWT & session authentication
 
